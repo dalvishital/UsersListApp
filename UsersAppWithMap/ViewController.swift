@@ -13,7 +13,7 @@ import CoreLocation
 var userFlag: Bool = false
 let width = UIScreen.main.bounds.width
 let height = UIScreen.main.bounds.height
-class ViewController: UIViewController ,UITableViewDataSource,UITableViewDelegate{
+class ViewController: UIViewController ,UITableViewDataSource,UITableViewDelegate, MKMapViewDelegate{
     
     var webTable = UITableView()
     override func viewDidLoad() {
@@ -79,9 +79,9 @@ class ViewController: UIViewController ,UITableViewDataSource,UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return height / 7.411
     }
-    
+    var index = 0
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CustomCell
         cell.selectionStyle = .none
@@ -102,10 +102,7 @@ class ViewController: UIViewController ,UITableViewDataSource,UITableViewDelegat
                         cell.showImage.image = UIImage(data: data!)
                         }
                         let annotation = MKPointAnnotation()
-                        let streetObj = locObj["street"] as? [String:Any] ?? [:]
-                        annotation.title = "street no.\(streetObj["number"] as! Int) \(streetObj["name"] as! String)"
-                        annotation.subtitle = "\(locObj["city"] as! String) \(locObj["state"] as! String)"
-                        print("Users count",users.count,indexPath.row)
+                       cell.mapView.tag = indexPath.row
                         annotation.coordinate = CLLocationCoordinate2D(latitude: Double(users[indexPath.row].getlattitude())!, longitude: Double(users[indexPath.row].getlongitude())!)
                         cell.mapView.addAnnotation(annotation)
                         let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
@@ -116,6 +113,20 @@ class ViewController: UIViewController ,UITableViewDataSource,UITableViewDelegat
         }
        return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         let cell = webTable.cellForRow(at: indexPath) as! CustomCell
+        let annotation = MKPointAnnotation()
+        let locObj = users[indexPath.row].getlocation()
+        let streetObj = locObj["street"] as? [String:Any] ?? [:]
+        annotation.title = "\(streetObj["number"] as! Int) \(streetObj["name"] as! String)"
+       annotation.subtitle = "\(locObj["city"] as! String) \(locObj["state"] as! String)"
+        annotation.coordinate = CLLocationCoordinate2D(latitude: Double(users[indexPath.row].getlattitude())!, longitude: Double(users[indexPath.row].getlongitude())!)
+        cell.mapView.addAnnotation(annotation)
+        let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+        cell.mapView.setRegion(region, animated: true)
+        //webTable.reloadData()
+    }
+    
 }
 
 class CustomCell: UITableViewCell {
@@ -141,8 +152,8 @@ class CustomCell: UITableViewCell {
         self.addSubview(showImage)
         NSLayoutConstraint(item: showImage, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: width/75).isActive = true
         NSLayoutConstraint(item: showImage, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: showImage, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: width/7.5).isActive = true
-        NSLayoutConstraint(item: showImage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: width/7.5).isActive = true
+        NSLayoutConstraint(item: showImage, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: width/6.25).isActive = true
+        NSLayoutConstraint(item: showImage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: width/6.25).isActive = true
     }
     func mapViewUI()
     {
@@ -152,13 +163,13 @@ class CustomCell: UITableViewCell {
         contentView.addSubview(mapView)
         NSLayoutConstraint(item: mapView, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
         NSLayoutConstraint(item: mapView, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1, constant: -(width/37.5)).isActive = true
-        NSLayoutConstraint(item: mapView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: width/5).isActive = true
-        NSLayoutConstraint(item: mapView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: width/5).isActive = true
+        NSLayoutConstraint(item: mapView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: width/4.166).isActive = true
+        NSLayoutConstraint(item: mapView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: width/4.166).isActive = true
     }
     func nameLabelUI(){
         NameLabel.translatesAutoresizingMaskIntoConstraints = false
         NameLabel.textColor = UIColor.black
-        NameLabel.font = UIFont.systemFont(ofSize: 20)
+        NameLabel.font = UIFont.systemFont(ofSize: width / 18.75)
         NameLabel.lineBreakMode = .byTruncatingTail
         NameLabel.textAlignment = .left
         self.addSubview(NameLabel)
@@ -169,11 +180,11 @@ class CustomCell: UITableViewCell {
     func genderLabelUI(){
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
         genderLabel.textColor = UIColor.black.withAlphaComponent(0.77)
-        genderLabel.font = UIFont.systemFont(ofSize: 18)
+        genderLabel.font = UIFont.systemFont(ofSize: width / 20.833)
         genderLabel.lineBreakMode = .byTruncatingTail
         genderLabel.textAlignment = .left
         self.addSubview(genderLabel)
-        NSLayoutConstraint(item: genderLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -height/26.68).isActive = true
+        NSLayoutConstraint(item: genderLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -height/22.233).isActive = true
         NSLayoutConstraint(item: genderLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: width/5).isActive = true
         NSLayoutConstraint(item: genderLabel, attribute: .trailing, relatedBy: .equal, toItem: mapView, attribute: .trailing, multiplier: 1, constant: -(width/6.818)).isActive = true
     }
