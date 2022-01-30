@@ -16,5 +16,5 @@ Steps for getting app.
 
 
 
-![Screenshot 2022-01-30 at 12 49 55 PM](https://user-images.githubusercontent.com/93400035/151690661-f359d44a-4679-4a03-8741-0285865bfc08.png)
 ![Screenshot 2022-01-30 at 12 50 09 PM](https://user-images.githubusercontent.com/93400035/151690665-5c93c22c-a2e8-46d0-9b9e-7269538acf4e.png)
+![Screenshot 2022-01-30 at 12 49 55 PM](https://user-images.githubusercontent.com/93400035/151690661-f359d44a-4679-4a03-8741-0285865bfc08.png)
